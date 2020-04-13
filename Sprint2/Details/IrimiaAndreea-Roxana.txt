@@ -17,3 +17,5 @@ pe care le putem obtine de la echipa de procesare
  - Sa antrenez modelul pe noul set de date
 
 Detalii relevante:
+ - Codul la care am lucrat poate si vazut aici : https://github.com/Roxanica123/CLEF2020-CheckThat-Lab-Team2/tree/master/Sprint2/Experiments/Tweets_and_fake_news_classification
+ 
