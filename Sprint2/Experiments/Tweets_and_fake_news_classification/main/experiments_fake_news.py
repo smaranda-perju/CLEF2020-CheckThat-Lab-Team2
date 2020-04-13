@@ -18,14 +18,19 @@ logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=lo
 
 # Load data
 news = du.load_data("../data/fake_news_dataset.csv")
+print(len(news))
 # Remove headers
-du.remove_data_header(news)
+for i in range(15000):
+    du.remove_data_header(news)
+print(len(news))
 
+# In[]
 # Get only cells with tweets text and labels
 news_text_list, news_label_list = du.get_selected_columns(news, 3, 4)
 
 # Filter data
 filtered_news, filtered_words_list = du.filter_data(news_text_list)
+
 # In[]
 # Convert labels from string to int
 news_label_list = du.convert_labels_to_int(news_label_list)
@@ -52,7 +57,7 @@ num_tokens = [len(tokens) for tokens in x_train_tokens + x_test_tokens]
 num_tokens = np.array(num_tokens)
 # Get the length of the tweet with the maximum number of tokens
 max_tokens = int(len((x_train + x_test_tokens)[np.argmax(num_tokens)]))
-
+print(max_tokens)
 # In[]
 # Zero is added before the values given in the padding operation.
 x_train_pad = pad_sequences(x_train_tokens, maxlen=max_tokens)
