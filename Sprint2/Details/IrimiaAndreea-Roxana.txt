@@ -7,8 +7,8 @@
 2. Ce probleme am avut:
 
  - Au aparut buguri si erori la importarea noilor date
- - Pentru ca noile date erau mai mari, timpul de executie a crescut considerabil si
- nu am reusit inca sa antrenez modelul folosindu-ma de acestea
+ - Pentru ca noile date erau mai mari, timpul de executie a crescut considerabil
+
 3. Ce planuri am in continuare:
 
  - Sa scriu cod de test
