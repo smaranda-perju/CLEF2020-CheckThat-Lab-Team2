@@ -1,7 +1,19 @@
 1. Ce am reusit sa fac in aceasta iteratie:
 
+- Am instalat si importat cateva pachete precum keras, tensorflow, pandas etc pentru a rezolva erorile de la compilarea codului de saptamana trecuta.
+- Am facut research si am reusit sa inteleg si sa rezolv erorile.
+- Am parcurs mai multe exemple de CNN : -handwritting digits
+                                        -fashion items
+                                        -cats vs dogs
+- Am parcurs un tutorial de testare a modelului CNN si am reusit sa testez pentru anumite categorii de imagini
+
 2. Ce probleme am avut:
+-erori cu importarea (rezolvat)
+-erori la rulare (rezolvat)
+-la testare, cand introduc imaginea unei pisici, programul prezice ca ar fi caine
 
 3. Ce planuri am in continuare:
+-sa rezolv eroarea de la testare, astfel incat programul sa recunoasca pisica
+-sa ma documentez in legatura cu adaptarea pe problema echipei a informatiilor acumulate din research si experimentare
 
 Detalii relevante:
