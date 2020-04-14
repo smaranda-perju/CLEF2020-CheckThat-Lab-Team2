@@ -1,7 +1,16 @@
 1. Ce am reusit sa fac in aceasta iteratie:
 
+- intelegerea exemplului pentru text classification 
+- vizualizarea formatului datelor
+
 2. Ce probleme am avut:
 
+- intelegerea cnn - ului
+- intelegerea deep learnig-ului
+
 3. Ce planuri am in continuare:
+
+- tranformarea datelor in formatul corect
+- ajustarea parametrilor
 
 Detalii relevante:
