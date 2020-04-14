@@ -1,7 +1,10 @@
 1. Ce am reusit sa fac in aceasta iteratie:
+      - Am reusit sa compilez codul din saptamana precedenta pe care nu l-am prezentat intrucat am avut erori
+      - Am continuat sa citesc articole pentru a-mi clarifica mai multe lucruri
+      - Am rulat si am experimentat si cu un exemplu de text classification primit de la scrum master
 
 2. Ce probleme am avut:
-
+       - Nu prea mi-a fost clar ce trebuia sa fac exact avand in vedere ca nu m-am mai intalnit cu machine learning
 3. Ce planuri am in continuare:
-
+      - Mai mult research
 Detalii relevante:
