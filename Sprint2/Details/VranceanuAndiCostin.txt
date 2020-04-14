@@ -14,3 +14,5 @@
 - ajustarea parametrilor
 
 Detalii relevante:
+
+https://github.com/Roxanica123/CLEF2020-CheckThat-Lab-Team2/tree/master/Sprint2/Experiments/Movie_reviews_classification
