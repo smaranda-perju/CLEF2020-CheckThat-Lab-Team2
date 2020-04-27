@@ -3,14 +3,15 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 import keras
-from keras.layers import Input, Embedding, LSTM, Dense
-from keras.models import Model
 import nltk
 from sklearn.model_selection import train_test_split
 from tensorflow.python.keras.preprocessing.sequence import pad_sequences
 from tensorflow.python.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow_core.python.keras.models import load_model
+from keras.layers import Conv1D, MaxPooling1D, Input
+from keras.layers import Input, Embedding, LSTM, Dense
+from keras.models import Model
+from keras.optimizers import Adam
 
 from utils.data_utils import DataUtility as du
 from utils.model_utils import CNNUtils as cnn_u
@@ -27,11 +28,13 @@ sentiments = du.load_data('../data/tweets_sentiments.csv')
 
 du.remove_data_header(tweets)
 du.remove_data_header(sentiments)
-du.remove_data_header(tweets)
+del tweets[3034:]
 # Get only cells with tweets text and labels
 tweets_text_list, tweets_label_list = du.get_selected_columns(tweets, 1, 8)
-# Filter data
 filtered_tweets, filtered_words_list = du.filter_data(tweets_text_list)
+
+print(len(tweets))
+print(len(sentiments))
 
 # In[]:
 # Eliminate the tweets that don't have a label
@@ -88,40 +91,64 @@ print(embedding_matrix.shape)
 tf.compat.v1.enable_eager_execution()
 
 # In[]:
-# a layer instance is callable on a tensor, and returns a tensor
-np.random.seed(0)  # Set a random seed for reproducibility
 
-# Headline input: meant to receive sequences of 100 integers, between 1 and 10000.
-# Note that we can name any layer by passing it a "name" argument.
+
+early_stopping = EarlyStopping(monitor='loss', min_delta=0.01, patience=4, verbose=1)
+
 main_input = Input(shape=(max_tokens,), dtype='int32', name='main_input')
 
 # This embedding layer will encode the input sequence
 # into a sequence of dense 512-dimensional vectors.
-x = Embedding(output_dim=embedding_matrix.shape[1], input_dim=len(list(tokenizer.word_index)) + 1,
-              input_length=max_tokens)(main_input)
+
+
+main_input = Input(shape=(max_tokens,), dtype='int32', name='main_input')
+
+# This embedding layer will encode the input sequence
+# into a sequence of dense 512-dimensional vectors.
+x = Embedding(input_dim=len(list(tokenizer.word_index)) + 1,
+              output_dim=embedding_matrix.shape[1],
+              weights=[embedding_matrix],
+              input_length=max_tokens,
+              trainable=True,  # the layer is trained
+              name='embedding_layer')(main_input)
+
+x = Conv1D(6, 7, activation='relu', padding='same')(x)
+x = MaxPooling1D(2)(x)
+x = Conv1D(6, 7, activation='relu', padding='same')(x)
+
+x = Dense(2, activation='softmax')(x)
 
 lstm_out = LSTM(32)(x)
+auxiliary_output = Dense(1, activation='sigmoid', name='aux_output')(lstm_out)
 auxiliary_input = Input(shape=(3,), name='aux_input')
 x = keras.layers.concatenate([lstm_out, auxiliary_input])
+
 x = Dense(64, activation='relu')(x)
 x = Dense(64, activation='relu')(x)
 x = Dense(64, activation='relu')(x)
+
+adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
 main_output = Dense(1, activation='sigmoid', name='main_output')(x)
-auxiliary_output = Dense(1, activation='sigmoid', name='aux_output')(lstm_out)
-model = Model(inputs=[main_input, auxiliary_input], outputs=[main_output])
-model.compile(optimizer='rmsprop',
-              loss={'main_output': 'binary_crossentropy'})
-# And trained it via:
+
+model = Model(inputs=[main_input, auxiliary_input], outputs=[main_output, auxiliary_output])
+model.compile(optimizer=adam,
+              loss={'main_output': 'binary_crossentropy', 'aux_output': 'binary_crossentropy'}, metrics=['accuracy'],
+              loss_weights={'main_output': 1., 'aux_output': 0.2})
+
 model.fit({'main_input': np.array(x_train_pad), 'aux_input': np.array(sentiments_train)},
-          {'main_output': np.array(y_train)},
-          epochs=3, batch_size=100)
+          {'main_output': np.array(y_train), 'aux_output': np.array(y_train)},
+          epochs=30, batch_size=100, callbacks=[early_stopping],
+          validation_split=0.1, shuffle=True, verbose=2)
 model.save("../data/model_1")
+# In[]:
 result = model.evaluate({'main_input': np.array(x_test_pad), 'aux_input': np.array(sentiments_test)},
-                        {'main_output': np.array(y_test)},
-                        batch_size=100,
-                        verbose=1)
+                        {'main_output': np.array(y_test), 'aux_output': np.array(y_test)},
+                        batch_size=32,
+                        verbose=2)
 # pred = model.predict({'main_input': np.array(x_test_pad), 'aux_input': np.array(sentiments_test)})
+print(model.metrics_names)
 print(result)
 
-
 # In[]:
+result = model.predict({'main_input': np.array(x_test_pad), 'aux_input': np.array(sentiments_test)})
+print(len(result[0]))
