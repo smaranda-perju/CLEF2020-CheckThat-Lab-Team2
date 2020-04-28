@@ -14,7 +14,19 @@ class DataUtility:
             for csv_row in spam_reader:
                 rows.append(csv_row)
         return rows
-
+   def convert_result(mat):
+        row = []
+        result = []
+        for i in range(0, len(mat[0])):
+            row[0] = mat[i][0]
+            row[1] = mat[i][1]
+            result.append(row)
+        return result
+    def export_mat(mat):
+            with open('../data/result.csv', mode='w') as cv:
+            write = csv.writer(cv)
+            for index in range(len(mat)):
+                write.writerow([mat[index][0], mat[index][1]])
     @staticmethod
     def get_selected_columns(in_data, col_x, col_y):
         x_list = []
